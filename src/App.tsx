@@ -2,10 +2,11 @@ import axios, { AxiosResponse } from 'axios';
 import React, { Component } from 'react';
 
 import { ErrorMsg } from './components/ErrorMsg';
+import UserCard, { User } from './components/UserCard';
 
 interface Props {}
 interface State {
-  user: { login?: string };
+  user: User;
   err: string;
 }
 
@@ -30,7 +31,7 @@ export default class App extends Component<Props, State> {
           if (err.message.includes(404))
             this.setState({
               ...this.state,
-              user: {},
+              user: { login: '' },
               err: 'Github user not found',
             });
         });
@@ -42,6 +43,7 @@ export default class App extends Component<Props, State> {
       <div>
         <h1>GitHub User Card</h1>
         <ErrorMsg message={this.state.err} />
+        {this.state.user.login && <UserCard user={this.state.user} />}
       </div>
     );
   }
