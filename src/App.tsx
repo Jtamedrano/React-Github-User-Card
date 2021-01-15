@@ -1,50 +1,64 @@
-import axios, { AxiosResponse } from 'axios';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { ErrorMsg } from './components/ErrorMsg';
-import UserCard, { User } from './components/UserCard';
+import { User } from './utils/types';
+import UserCard from './components/UserCard';
+import SearchUser from './components/SearchUser';
+import {
+  addUserFollower,
+  fetchUser,
+  fetchUserDataToggleLoading,
+} from './redux/actions/actions';
+import store from './redux/store';
+import { axiosWithBase } from './utils/axiosWithBase';
+import axios, { AxiosResponse } from 'axios';
 
-interface Props {}
-interface State {
-  user: User;
-  err: string;
+interface Props {
+  user?: User;
+  isloading?: boolean;
+  followers?: User[];
 }
 
-export default class App extends Component<Props, State> {
-  state = {
-    user: {
-      login: '',
-    },
-    err: '',
-  };
+interface State {}
 
-  componentDidMount() {
-    if (this.state.user.login === '') {
-      axios
-        .get('https://api.github.com/users/Jtamedrano')
-        .then((res: AxiosResponse) => {
+export class App extends Component<Props, State> {
+  componentDidUpdate(prevProps: Props, prevState: State, snapshop: any) {
+    if (this.props.user?.login !== prevProps.user?.login) {
+      store.dispatch(fetchUserDataToggleLoading());
+      if (this.props.user) {
+        axios.get(this.props.user.followers_url!).then((res: AxiosResponse) => {
           console.log(res.data);
-          if (res.status === 404) throw new Error('User not found');
-          this.setState({ ...this.state, user: res.data, err: '' });
-        })
-        .catch((err) => {
-          if (err.message.includes(404))
-            this.setState({
-              ...this.state,
-              user: { login: '' },
-              err: 'Github user not found',
-            });
+          store.dispatch(addUserFollower(res.data));
         });
+      }
     }
   }
 
   render() {
+    console.log(this.props.user);
+    console.log(this.props.followers);
     return (
       <div>
         <h1>GitHub User Card</h1>
-        <ErrorMsg message={this.state.err} />
-        {this.state.user.login && <UserCard user={this.state.user} />}
+        <SearchUser />
+        {this.props.user && (
+          <>
+            <UserCard user={this.props.user} showLocation={true} />
+            {this.props.followers &&
+              this.props.followers.map((user: User) => (
+                <UserCard user={user} key={user.id} showLocation={false} />
+              ))}
+          </>
+        )}
       </div>
     );
   }
 }
+
+const mapStateToProps = (state: any) => ({
+  user: state.user.user,
+  isLoading: state.user.isLoading,
+  followers: state.user.followers,
+});
+
+export default connect(mapStateToProps)(App);
