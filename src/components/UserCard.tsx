@@ -6,13 +6,14 @@ interface State {}
 interface Props {
   user: User;
   showLocation?: boolean;
+  class?: string;
 }
 
 class UserCard extends Component<Props, State> {
   render() {
     return (
       <>
-        <div>
+        <div className={`${this.props.class} user-card`}>
           <div>
             <img
               src={this.props.user.avatar_url}

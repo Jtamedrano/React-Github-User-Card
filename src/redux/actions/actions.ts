@@ -4,7 +4,7 @@ import { ActionEnum } from './actionTypes';
 import { axiosWithBase } from '../../utils/axiosWithBase';
 import { User } from '../../utils/types';
 
-export const fetchUserDataToggleLoading = () => ({
+export const ToggleLoading = () => ({
   type: ActionEnum.FETCH_USER_DATA_TOGGLE_LOADING,
 });
 
@@ -22,12 +22,19 @@ export const addUserFollower = (payload: User) => {
 };
 
 export const fetchUser = (dispatch: Dispatch<any>, username: string) => {
-  dispatch(fetchUserDataToggleLoading());
+  dispatch(ToggleLoading());
   axiosWithBase()
     .get(username)
     .then((res: AxiosResponse) => {
-      console.log(res.data);
-      dispatch(fetchUserDataToggleLoading());
+      dispatch(ToggleLoading());
       dispatch(fetchUserData(res.data));
+    });
+
+  dispatch(ToggleLoading());
+  axiosWithBase()
+    .get(`${username}/followers`)
+    .then((res: AxiosResponse) => {
+      dispatch(ToggleLoading());
+      dispatch(addUserFollower(res.data));
     });
 };

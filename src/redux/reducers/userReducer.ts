@@ -1,8 +1,14 @@
 import { User } from '../../utils/types';
 import { Action, ActionEnum } from '../actions/actionTypes';
 
-const initialState: { isLoading: boolean; user?: User; followers: User[] } = {
+const initialState: {
+  isLoading: boolean;
+  username?: string;
+  user?: User;
+  followers: User[];
+} = {
   isLoading: false,
+  username: 'Jtamedrano',
   user: undefined,
   followers: [],
 };

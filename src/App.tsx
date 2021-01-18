@@ -4,16 +4,12 @@ import { connect } from 'react-redux';
 import { User } from './utils/types';
 import UserCard from './components/UserCard';
 import SearchUser from './components/SearchUser';
-import {
-  addUserFollower,
-  fetchUser,
-  fetchUserDataToggleLoading,
-} from './redux/actions/actions';
+import { fetchUser } from './redux/actions/actions';
 import store from './redux/store';
-import { axiosWithBase } from './utils/axiosWithBase';
-import axios, { AxiosResponse } from 'axios';
+import { motion } from 'framer-motion';
 
 interface Props {
+  username?: string;
   user?: User;
   isloading?: boolean;
   followers?: User[];
@@ -22,35 +18,47 @@ interface Props {
 interface State {}
 
 export class App extends Component<Props, State> {
+  componentDidMount() {
+    fetchUser(store.dispatch, 'Jtamedrano');
+  }
+
   componentDidUpdate(prevProps: Props, prevState: State, snapshop: any) {
-    if (this.props.user?.login !== prevProps.user?.login) {
-      store.dispatch(fetchUserDataToggleLoading());
-      if (this.props.user) {
-        axios.get(this.props.user.followers_url!).then((res: AxiosResponse) => {
-          console.log(res.data);
-          store.dispatch(addUserFollower(res.data));
-        });
-      }
+    if (
+      this.props.user?.login !== prevProps.user?.login &&
+      this.props.username
+    ) {
+      fetchUser(store.dispatch, this.props.username!);
     }
   }
 
   render() {
-    console.log(this.props.user);
-    console.log(this.props.followers);
     return (
-      <div>
-        <h1>GitHub User Card</h1>
-        <SearchUser />
-        {this.props.user && (
-          <>
-            <UserCard user={this.props.user} showLocation={true} />
-            {this.props.followers &&
-              this.props.followers.map((user: User) => (
-                <UserCard user={user} key={user.id} showLocation={false} />
-              ))}
-          </>
-        )}
-      </div>
+      <main>
+        <motion.nav>
+          <h1>GitHub User Card</h1>
+          <SearchUser />
+        </motion.nav>
+        <div className="user-board">
+          {this.props.user && (
+            <>
+              <UserCard
+                user={this.props.user}
+                showLocation={true}
+                class="main-user"
+              />
+              {this.props.followers &&
+                this.props.followers.map((user: User) => (
+                  <UserCard
+                    user={user}
+                    key={user.id}
+                    showLocation={false}
+                    class="follower"
+                  />
+                ))}
+            </>
+          )}
+        </div>
+      </main>
     );
   }
 }

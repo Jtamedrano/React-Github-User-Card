@@ -7,7 +7,7 @@ const SearchUser = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const dispatch = useDispatch();
   return (
-    <div>
+    <div className="search-bar">
       <div>
         <input
           type="text"
