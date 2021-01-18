@@ -9,7 +9,7 @@ const SearchUser = () => {
 
   return (
     <div className="search-bar">
-      <div>
+      <div className="input-group">
         <input
           type="text"
           name="searchInput"

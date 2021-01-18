@@ -13,20 +13,22 @@ export class UserPanel extends Component<Props, State> {
       <div className="user-board">
         {this.props.user && (
           <>
-            <UserCard
-              user={this.props.user}
-              showLocation={true}
-              class="main-user"
-            />
-            {this.props.followers &&
-              this.props.followers.map((user: User) => (
-                <UserCard
-                  user={user}
-                  key={user.id}
-                  showLocation={false}
-                  class="follower"
-                />
-              ))}
+            <UserCard user={this.props.user} main={true} class="main-user" />
+            {this.props.followers && (
+              <>
+                <h4>Followers</h4>
+                <div className="followers">
+                  {this.props.followers.map((user: User) => (
+                    <UserCard
+                      user={user}
+                      key={user.id}
+                      main={false}
+                      class="follower"
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

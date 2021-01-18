@@ -34,10 +34,10 @@ export class App extends Component<Props, State> {
   render() {
     return (
       <main>
-        <motion.nav>
+        <nav>
           <h1>GitHub User Card</h1>
           <SearchUser />
-        </motion.nav>
+        </nav>
         <UserPanel />
       </main>
     );
