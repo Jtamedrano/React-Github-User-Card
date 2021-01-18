@@ -1,12 +1,14 @@
 import { User } from '../../utils/types';
 import { Action, ActionEnum } from '../actions/actionTypes';
 
-const initialState: {
+export interface UserState {
   isLoading: boolean;
   username?: string;
   user?: User;
   followers: User[];
-} = {
+}
+
+const initialState: UserState = {
   isLoading: false,
   username: 'Jtamedrano',
   user: undefined,

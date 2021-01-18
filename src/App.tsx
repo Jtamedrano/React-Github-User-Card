@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// Component Type
+import { Component } from 'react';
 
+// User Type
 import { User } from './utils/types';
-import UserCard from './components/UserCard';
+
+// Components
+import UserPanel from './components/UserPanel';
 import SearchUser from './components/SearchUser';
+
+// From Redux
+import { connect } from 'react-redux';
 import { fetchUser } from './redux/actions/actions';
 import store from './redux/store';
+import { UserState } from './redux/reducers/userReducer';
+
+// Animation Lib
 import { motion } from 'framer-motion';
 
-interface Props {
+export interface Props {
   username?: string;
   user?: User;
   isloading?: boolean;
@@ -22,15 +31,6 @@ export class App extends Component<Props, State> {
     fetchUser(store.dispatch, 'Jtamedrano');
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State, snapshop: any) {
-    if (
-      this.props.user?.login !== prevProps.user?.login &&
-      this.props.username
-    ) {
-      fetchUser(store.dispatch, this.props.username!);
-    }
-  }
-
   render() {
     return (
       <main>
@@ -38,33 +38,15 @@ export class App extends Component<Props, State> {
           <h1>GitHub User Card</h1>
           <SearchUser />
         </motion.nav>
-        <div className="user-board">
-          {this.props.user && (
-            <>
-              <UserCard
-                user={this.props.user}
-                showLocation={true}
-                class="main-user"
-              />
-              {this.props.followers &&
-                this.props.followers.map((user: User) => (
-                  <UserCard
-                    user={user}
-                    key={user.id}
-                    showLocation={false}
-                    class="follower"
-                  />
-                ))}
-            </>
-          )}
-        </div>
+        <UserPanel />
       </main>
     );
   }
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: { user: UserState }) => ({
   user: state.user.user,
+  username: state.user.username,
   isLoading: state.user.isLoading,
   followers: state.user.followers,
 });

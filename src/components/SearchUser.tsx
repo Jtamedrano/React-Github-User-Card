@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ErrorMsg } from './ErrorMsg';
-import { fetchUser } from '../redux/actions/actions';
+import { fetchUser, setUsername } from '../redux/actions/actions';
 
 const SearchUser = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const dispatch = useDispatch();
+
   return (
     <div className="search-bar">
       <div>
@@ -22,6 +23,7 @@ const SearchUser = () => {
       </div>
       <button
         onClick={() => {
+          dispatch(setUsername(searchInput));
           fetchUser(dispatch, searchInput);
           setSearchInput('');
         }}

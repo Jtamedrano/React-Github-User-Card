@@ -21,6 +21,11 @@ export const addUserFollower = (payload: User) => {
   };
 };
 
+export const setUsername = (username: string) => ({
+  type: ActionEnum.SET_USERNAME,
+  payload: username,
+});
+
 export const fetchUser = (dispatch: Dispatch<any>, username: string) => {
   dispatch(ToggleLoading());
   axiosWithBase()
